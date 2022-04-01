@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm/view/home_view.dart';
+import 'package:mvvm/view/posts/posts_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Text('data'),
+      home: PostsView(),
     );
   }
 }
