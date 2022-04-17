@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm/routs.dart';
 import 'package:mvvm/view/home_view.dart';
-import 'package:mvvm/view/posts/posts_view.dart';
+import 'package:mvvm/view/posts/posts_view_assistant.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PostsView(),
+      //home: Test(),
+      initialRoute: BaseMain.rout,
+      onGenerateRoute: (RouteSettings settings) => buildRoute(settings),
     );
   }
 }

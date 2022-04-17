@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm/repositories/posts/post_remotely.dart';
 import 'package:mvvm/view/posts/post_item.dart';
 import 'package:mvvm/view_model/posts/post_view_model.dart';
 import 'package:mvvm/view_model/posts/posts_view_model.dart';
+import 'package:provider/provider.dart';
 
 class PostsView extends StatefulWidget {
-  PostsView({Key? key}) : super(key: key);
+  PostsView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PostsView> createState() => _PostsViewState();
 }
 
 class _PostsViewState extends State<PostsView> {
-  final PostsViewMoel postsViewMoel =
-      PostsViewMoel(postRepository: PostRemotely());
-
   @override
   void initState() {
-    // TODO: implement initState
+    print("init");
     super.initState();
   }
 
@@ -25,7 +24,7 @@ class _PostsViewState extends State<PostsView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(postsViewMoel.title),
+          title: Text(Provider.of<PostsViewMoel>(context).title),
         ),
         body: FutureBuilder<List<PostViewModel>?>(
           builder: (context, AsyncSnapshot<List<PostViewModel>?> snapshot) {
@@ -40,13 +39,12 @@ class _PostsViewState extends State<PostsView> {
                 },
                 padding: const EdgeInsets.all(10),
                 itemCount: snapshot.data?.length,
+                cacheExtent: 300,
               );
             }
             return const Text('no result');
           },
-          future: postsViewMoel.getData(),
+          future: Provider.of<PostsViewMoel>(context).getData(),
         ));
   }
 }
-
-
