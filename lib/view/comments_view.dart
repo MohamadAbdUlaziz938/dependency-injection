@@ -5,6 +5,8 @@ import 'package:mvvm/view/posts/post_view.dart';
 import 'package:mvvm/view_model/comments_view_model.dart';
 import 'package:provider/provider.dart';
 
+PageStorageBucket pageStorageBucket = PageStorageBucket();
+
 class CommentsView extends StatefulWidget {
   const CommentsView({Key? key}) : super(key: key);
 
@@ -20,7 +22,6 @@ class _CommentsViewState extends State<CommentsView> {
           title: Text('all comments'),
         ),
         body: ChangeNotifierProvider(
-          key: ValueKey("value"),
           create: (context) =>
               CommentsViewModel(commentRepository: CommentRemotely()),
           builder: (context, child) {
@@ -29,6 +30,8 @@ class _CommentsViewState extends State<CommentsView> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasData) {
+                  pageStorageBucket.writeState(context, snapshot,
+                      identifier: const ValueKey('1'));
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       return CommentItem(
@@ -42,8 +45,13 @@ class _CommentsViewState extends State<CommentsView> {
                 }
                 return const Text('no result');
               },
-              future: Provider.of<CommentsViewModel>(context)
-                  .getComments(postId: 1),
+              future: pageStorageBucket.readState(context,
+                          identifier: ValueKey("1")) !=
+                      null
+                  ? Future.sync(() => pageStorageBucket.readState(context,
+                      identifier: ValueKey("1"))).then((value) => value.data)
+                  : Provider.of<CommentsViewModel>(context)
+                      .getComments(postId: 1),
             );
           },
         ));
